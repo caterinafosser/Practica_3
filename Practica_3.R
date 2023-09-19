@@ -72,20 +72,47 @@ mi.matriz[b]
 #a
 #ES MUY DIFICIL AAAAA
 A=matrix(1:8,nrow=2)
-B=matrix(9:16,nrow=4)
+B=matrix(9:16,nrow=2)
 C=matrix(0,nrow=nrow(A),ncol=ncol(B))
+if (ncol(A)!=nrow(B)){
+  cat("Las dimensiones son incompatibles para el producto matricial.")
+}else{
 for (i in 1:nrow(A)){
-  for (j in 1:ncol(A)){
-    C[i,j]=C[i,j]+A[i,j]*B[j,i]
+  for (j in 1:ncol(B)){
+    C[i,j]=sum(A[i,]*B[,j])
   }
+}
 }
 
 #b
 A=matrix(1:2000,ncol=100)
 B=matrix(2001:4000,ncol=100)
 AB=matrix(0,ncol=ncol(A),nrow=nrow(A))
+if (ncol(A)==ncol(B)&&nrow(A)==nrow(B)){
 for (i in 1:nrow(A)){
   for (j in 1:ncol(A)){
     AB[i,j]=A[i,j]*B[i,j]
   }
 }
+}else {
+  cat("Las dimensiones son incompatibles para el producto matricial.")
+}
+#e completar
+
+#Ejercicio 4----
+A<-matrix(c(3,6,6,12),2,2)
+B<-c(4,28)
+#construyo la inversa
+#a
+if (det(A)!=0){
+  A_inversa<-matrix(c(A[2,2],-A[2,1],-A[1,2],A[1,1]),2)/det(A)
+  X<-A_inversa%*%B
+  cat("El vector que resuelve este sistema es",X)
+}else{
+  cat("No se puede resolver.")
+}
+#b
+x=solve(A,B)
+#Ejercicio 5----
+
+
