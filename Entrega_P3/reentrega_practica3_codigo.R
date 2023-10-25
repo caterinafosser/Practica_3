@@ -1,8 +1,10 @@
-#Ejercicio para entregar -- PRACTICA 3
+#Ejercicio para entregar -- PRACTICA 3 -- REENTREGA
 
 setwd("C:/Users/54249/Desktop/Labo_Cate/Practica_3/Entrega_P3")
 rm(list=ls())
 
+
+##1
 #Ingreso los datos de cada estacion y su informacion
 
 Azul<-read.table("AZUL.txt")
@@ -21,6 +23,7 @@ info_mendoza<-data.frame("MENDOZA",-32.9,-68.8,769)
 colnames(info_mendoza)=c("V1","V2","V3","V4")
 info_estaciones<-rbind(info_estaciones,info_mendoza)
 
+#hago una lista para cada estacion con su informacion, contenida en 2 data frames
 datos_azul<-list(Azul,info_estaciones[1,])
 datos_catamarca<-list(Catamarca,info_estaciones[3,])
 datos_aeroparque<-list(Aeroparque,info_estaciones[2,])
@@ -37,13 +40,14 @@ for (i in 1:length(datos_todos)){
   datos_todos[[i]][[1]][datos_todos[[i]][[1]]==dato_faltante]<-NA
 }
 
-#cambio de fahrenheit a celsius
+#cambio de fahrenheit a celsius en las columnas que corresponden a T y Td dentro del 1er data frame de cada estacion (1er elem de cada lista)
 for (i in 1:length(datos_todos)){
   datos_todos[[i]][[1]][3:4]<-(datos_todos[[i]][[1]][3:4]-32)*(5/9)
 }
 
 
-#genero funcion que resuma por estacion, depende solo de la lista
+##2
+#i) genero funcion que resuma por estacion, depende solo de la lista de listas
 resumen<-function(lista){
   for (i in 1:length(lista)){
     estacion<-as.character(lista[[i]][[2]][["V1"]])
@@ -86,22 +90,20 @@ resumen<-function(lista){
 }
 
 
-#genero funcion que diga si hay estaciones en un rango de latitud y longitud, depende de estos valores y el array
-estaciones_cercanas<-c()
-e<-1
-region<-function(lista,long_max,long_min,lat_max,lat_min){
-  for (i in 1:nrow(lista)){
-   if (lista[[i,2]]>=lat_min&lista[[i,2]]<=lat_max&lista[[i,3]]>=long_min&lista[[i,3]]<=long_max){
-     estaciones_cercanas[e]<-lista[[i,1]]
+#ii) genero funcion que diga si hay estaciones en un rango de latitud y longitud, depende de estos valores y el array
+
+region<-function(lista,lat_min,lat_max,long_min,long_max){
+  estaciones_cercanas<-c()  #genero vector donde se van a guardar los nombres de las estaciones
+  for (i in 1:length(lista)){  #recorro cada estacion dentro del array
+   if (lista[[i]][[2]][["V2"]]>=lat_min&lista[[i]][[2]][["V2"]]<=lat_max&lista[[i]][[2]][["V3"]]>=long_min&lista[[i]][[2]][["V3"]]<=long_max){ #condiciones de lat y long
+     estaciones_cercanas<-c(estaciones_cercanas,lista[[i]][[2]][["V1"]]) #si cond se cumple, agrego el nombre a mi vector
    }
-    e<-e+1
   }
-  if (length(estaciones_cercanas==0)){
+  if (length(estaciones_cercanas)==0){
     estaciones_cercanas<-"No hay estaciones cercanas"
   }
-  return(estaciones_cercanas)
+  return(cat("Las estaciones que se encuentran dentro de la region son:",estaciones_cercanas))
 }
 
-#guardo el array en un archivo .Rdata
-save(datos,file="Datos_Estaciones.Rdata")
-
+#iii) guardo el array en un archivo .Rdata
+save(datos_todos,file="Datos_Estaciones.Rdata")
